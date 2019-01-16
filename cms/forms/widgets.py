@@ -40,7 +40,7 @@ class PageSelectWidget(MultiWidget):
             page = Page.objects.select_related('node').get(pk=value)
             return [page.node.site_id, page.pk, page.pk]
         site = Site.objects.get_current()
-        return [site.pk,None,None]
+        return [site.pk, None, None]
 
     def _has_changed(self, initial, data):
         # THIS IS A COPY OF django.forms.widgets.Widget._has_changed()
@@ -50,9 +50,9 @@ class PageSelectWidget(MultiWidget):
         Return True if data differs from initial.
         """
         # For purposes of seeing whether something has changed, None is
-        # the same as an empty string, if the data or inital value we get
+        # the same as an empty string, if the data or initial value we get
         # is None, replace it w/ u''.
-        if data is None or (len(data)>=2 and data[1] in [None,'']):
+        if data is None or (len(data) >= 2 and data[1] in [None, '']):
             data_value = u''
         else:
             data_value = data
@@ -69,12 +69,14 @@ class PageSelectWidget(MultiWidget):
         page_choices = get_page_choices()
         self.site_choices = site_choices
         self.choices = page_choices
-        self.widgets = (Select(choices=site_choices ),
-                   Select(choices=[('', '----')]),
-                   Select(choices=self.choices, attrs={'style': "display:none;"} ),
+        self.widgets = (
+            Select(choices=site_choices),
+            Select(choices=[('', '----')]),
+            Select(choices=self.choices, attrs={'style': "display:none;"}),
         )
 
-    def _build_script(self, name, value, attrs={}):
+    @staticmethod
+    def _build_script(name, value, attrs={}):
         return r"""<script type="text/javascript">
                 var CMS = window.CMS || {};
 
@@ -93,7 +95,8 @@ class PageSelectWidget(MultiWidget):
         context['widget']['script_init'] = self._build_script(name, value, context['widget']['attrs'])
         return context
 
-    def format_output(self, rendered_widgets):
+    @staticmethod
+    def format_output(rendered_widgets):
         return u' '.join(rendered_widgets)
 
 
@@ -158,22 +161,23 @@ class UserSelectAdminWidget(Select):
     """
     def render(self, name, value, attrs=None, choices=(), renderer=None):
         output = [super(UserSelectAdminWidget, self).render(name, value, attrs, renderer=renderer)]
-        if hasattr(self, 'user') and (self.user.is_superuser or \
-            self.user.has_perm(PageUser._meta.app_label + '.' + get_permission_codename('add', PageUser._meta))):
+        if hasattr(self, 'user') and (
+            self.user.is_superuser or
+                self.user.has_perm(PageUser._meta.app_label + '.' + get_permission_codename('add', PageUser._meta))):
             # append + icon
             add_url = admin_reverse('cms_pageuser_add')
-            output.append(u'<a href="%s" class="add-another" id="add_id_%s" onclick="return showAddAnotherPopup(this);"> ' % \
-                    (add_url, name))
+            output.append(
+                u'<a href="%s" class="add-another" id="add_id_%s" '
+                u'onclick="return showAddAnotherPopup(this);"> ' % (add_url, name)
+            )
         return mark_safe(u''.join(output))
 
 
 class AppHookSelect(Select):
-
     """Special widget used for the App Hook selector in the Advanced Settings
     of the Page Admin. It adds support for a data attribute per option and
     includes supporting JS into the page.
     """
-
     class Media:
         js = (
             static_with_version('cms/js/dist/bundle.forms.apphookselect.min.js'),
