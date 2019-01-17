@@ -6,7 +6,7 @@ from django.contrib.sites.models import Site
 from django.forms.widgets import MultiWidget, Select, TextInput
 from django.urls import NoReverseMatch, reverse_lazy
 from django.utils.encoding import force_text
-from django.utils.html import escape, escapejs
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
 from cms.utils.urlutils import admin_reverse, static_with_version

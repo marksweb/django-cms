@@ -1324,12 +1324,12 @@ class EditModelTemplateTagTest(ToolbarTestBase):
 
         self.assertContains(
             response,
-            'CMS._plugins.push(["cms-plugin-{0}"'.format(plugin.pk)
+            '["cms-plugin-{0}"'.format(plugin.pk)
         )
 
         self.assertContains(
             response,
-            'CMS._plugins.push(["cms-placeholder-{0}"'.format(ex1.placeholder.pk)
+            '["cms-placeholder-{0}"'.format(ex1.placeholder.pk)
         )
 
     def test_filters(self):
@@ -1519,7 +1519,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             '<img src="/static/cms/img/toolbar/render_model_placeholder.png">'
             '<template class="cms-plugin cms-plugin-end cms-plugin-{0}-{1}-{2} cms-render-model-icon"></template>'.format(
                 'placeholderapp', 'example1', ex1.pk))
-        self.assertContains(response, "onClose: 'REFRESH_PAGE',")
+        self.assertContains(response, '"onClose": "REFRESH_PAGE",')
 
     def test_icon_tag(self):
         user = self.get_staff()
@@ -1569,11 +1569,11 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
             response,
-            "CMS._plugins.push(['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_1', ex1.pk))
+            "['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_1', ex1.pk))
 
         self.assertContains(
             response,
-            "CMS._plugins.push(['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_2', ex1.pk))
+            "['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_2', ex1.pk))
 
     def test_add_tag(self):
         user = self.get_staff()
@@ -1748,7 +1748,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
                 'placeholderapp', 'example1', ex1.pk))
         self.assertContains(
             response,
-            "edit_plugin: '%s?language=%s&amp;edit_fields=changelist'" % (admin_reverse('placeholderapp_example1_changelist'), 'en'))
+            '"edit_plugin": "%s?language=%s&amp;edit_fields=changelist"' % (admin_reverse('placeholderapp_example1_changelist'), 'en'))
 
     def test_invalid_attribute(self):
         user = self.get_staff()
@@ -1829,7 +1829,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         request = self.get_page_request(page, user, edit=True)
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
-            response, "edit_plugin: '/admin/placeholderapp/example1/edit-field/%s/en/" % ex1.pk)
+            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/"' % ex1.pk)
 
     def test_view_url(self):
         user = self.get_staff()
@@ -1847,7 +1847,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         request = self.get_page_request(page, user, edit=True)
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
-            response, "edit_plugin: '/admin/placeholderapp/example1/edit-field/%s/en/" % ex1.pk)
+            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/"' % ex1.pk)
 
     def test_method_attribute(self):
         user = self.get_staff()
@@ -1872,7 +1872,9 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             'char_1'
             '<template class="cms-plugin cms-plugin-end cms-plugin-{0}-{1}-{2}-{3} cms-render-model"></template>'
             '</h1>'.format(
-                'placeholderapp', 'example1', 'callable_item', ex1.pk))
+                'placeholderapp', 'example1', 'callable_item', ex1.pk
+            )
+        )
 
     def test_admin_url(self):
         user = self.get_staff()
@@ -1920,7 +1922,9 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             'char_1'
             '<template class="cms-plugin cms-plugin-end cms-plugin-{0}-{1}-{2}-{3} cms-render-model"></template>'
             '</h1>'.format(
-                'placeholderapp', 'example1', 'callable_item', ex1.pk))
+                'placeholderapp', 'example1', 'callable_item', ex1.pk
+            )
+        )
         self.assertContains(response, "/admin/placeholderapp/example1/edit-field/%s/en/" % ex1.pk)
         self.assertTrue(re.search(self.edit_fields_rx % "char_2", response.content.decode('utf8')))
 
@@ -1946,7 +1950,9 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             'char_1'
             '<template class="cms-plugin cms-plugin-end cms-plugin-{0}-{1}-{2}-{3} cms-render-model"></template>'
             '</h1>'.format(
-                'placeholderapp', 'example1', 'callable_item', ex1.pk))
+                'placeholderapp', 'example1', 'callable_item', ex1.pk
+            )
+        )
         self.assertContains(response, "/admin/placeholderapp/example1/edit-field/%s/en/" % ex1.pk)
         self.assertTrue(re.search(self.edit_fields_rx % "char_1", response.content.decode('utf8')))
         self.assertTrue(re.search(self.edit_fields_rx % "char_1%2Cchar_2", response.content.decode('utf8')))
@@ -1998,7 +2004,9 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             'char_1'
             '<template class="cms-plugin cms-plugin-end cms-plugin-{0}-{1}-{2}-{3} cms-render-model"></template>'
             '</h1>'.format(
-                'placeholderapp', 'example1', 'callable_item', ex1.pk))
+                'placeholderapp', 'example1', 'callable_item', ex1.pk
+            )
+        )
 
     def test_edit_field(self):
         from django.contrib.admin import site
@@ -2070,7 +2078,11 @@ class EditModelTemplateTagTest(ToolbarTestBase):
             '<template class="cms-plugin cms-plugin-start cms-plugin-cms-page-changelist-%s cms-render-model cms-render-model-block"></template>\n        <h3>Menu</h3>' % page.pk)
         self.assertContains(
             response,
-            "edit_plugin: '%s?language=%s&amp;edit_fields=changelist'" % (admin_reverse('cms_page_changelist'), language))
+            '"edit_plugin": "%s?language=%s&amp;edit_fields=changelist"' % (
+                admin_reverse('cms_page_changelist'), language
+            )
+        )
+
 
 class CharPkFrontendPlaceholderAdminTest(ToolbarTestBase):
 
