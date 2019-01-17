@@ -3,14 +3,13 @@ from __future__ import unicode_literals
 
 import json
 
-from classytags.core import Tag, Options
-from cms.utils.encoder import SafeJSONEncoder
 from django import template
 from django.utils.safestring import mark_safe
 
-from sekizai.helpers import get_varname
-
+from classytags.core import Tag, Options
 from cms.models import StaticPlaceholder
+from cms.utils.encoder import SafeJSONEncoder
+from sekizai.helpers import get_varname
 
 
 register = template.Library()
@@ -72,7 +71,11 @@ def render_plugin_init_js(context, plugin):
     plugin_js = renderer.get_plugin_toolbar_js(plugin)
     # Add the toolbar javascript for this plugin to the
     # sekizai "js" namespace.
-    context[get_varname()]['js'].append('<script data-cms>{}</script>'.format(plugin_js))
+    context[get_varname()]['js'].append(
+        '<script data-cms type="application/json" class="cms-plugin-data">{}</script>'.format(
+            json.dumps([plugin_js])
+        )
+    )
 
 
 class JavascriptString(Tag):
@@ -90,4 +93,6 @@ class JavascriptString(Tag):
             from django.utils.text import javascript_quote as escapejs
         rendered = self.nodelist.render(context)
         return "'%s'" % escapejs(rendered.strip())
+
+
 register.tag(JavascriptString)

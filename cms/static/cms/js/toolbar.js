@@ -46,6 +46,29 @@ CMS.KEYS = KEYS;
 CMS.$ = $;
 CMS.Class = Class;
 
+CMS.config = JSON.parse(document.getElementById('cms-config').text);
+
 initHelpShortcuts();
 
 window.CMS = CMS;
+
+$(function () {
+    $('.cms-plugin-data').each(function(i, plugin_elements) {
+        CMS._plugins = CMS._plugins.concat(JSON.parse(plugin_elements.text));
+    });
+
+    $('.cms-placeholder-data').each(function(i, placeholder_element) {
+        CMS._plugins.push(JSON.parse(placeholder_element.text));
+    });
+
+    CMS.settings = CMS.API.Helpers.getSettings();
+
+    // extends API
+    CMS.API.Toolbar = new CMS.Toolbar();
+    CMS.API.Clipboard = new CMS.Clipboard();
+    CMS.API.StructureBoard = new CMS.StructureBoard();
+    CMS.API.Messages = new CMS.Messages();
+    CMS.API.Tooltip = new CMS.Tooltip();
+
+    CMS.Plugin._initializeTree();
+});
