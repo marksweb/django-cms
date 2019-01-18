@@ -7,7 +7,7 @@ from django.utils.six import text_type
 from django.utils.translation import override as force_language, ugettext
 
 
-def get_placeholder_toolbar_js(placeholder, allowed_plugins=None):
+def get_placeholder_toolbar_json(placeholder, allowed_plugins=None):
     label = placeholder.get_label() or ''
     help_text = ugettext(
         'Add plugin to placeholder "%(placeholder_label)s"'
@@ -43,7 +43,7 @@ def get_plugin_toolbar_info(plugin, children=None, parents=None):
     return data
 
 
-def get_plugin_toolbar_js(plugin, children=None, parents=None):
+def get_plugin_toolbar_json(plugin, children=None, parents=None):
     return [
         'cms-plugin-{}'.format(plugin.pk),
         get_plugin_toolbar_info(

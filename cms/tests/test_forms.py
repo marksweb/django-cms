@@ -116,7 +116,7 @@ class FormsTestCase(CMSTestCase):
         raised = False
         try:
             fake_field = Mock_PageSelectFormField(required=True)
-            data_list = (0, None)  #(site_id, page_id) dsite-id is not used
+            data_list = (0, None)  # (site_id, page_id) dsite-id is not used
             fake_field.compress(data_list)
             self.fail('compress function didn\'t raise!')
         except forms.ValidationError:
@@ -221,10 +221,7 @@ class FormsTestCase(CMSTestCase):
         app_config_select = ApplicationConfigSelect(app_configs=app_configs)
         output = app_config_select.render('application_configurations', 1)
         self.assertFalse('<script>alert("bad-stuff");</script>' in output)
-        self.assertTrue('\\u0026lt\\u003Bscript\\u0026gt\\u003Balert('
-                        '\\u0026quot\\u003Bbad\\u002Dstuff\\u0026quot'
-                        '\\u003B)\\u003B\\u0026lt\\u003B/script\\u0026gt'
-                        '\\u003B' in output)
+        self.assertTrue('&lt;script&gt;alert(&quot;bad-stuff&quot;);&lt;/script&gt;' in output)
 
     def test_superlazy_iterator_behaves_properly_for_sites(self):
         normal_result = get_site_choices()

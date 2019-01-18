@@ -40,21 +40,26 @@ class TestStructureRenderer(CMSTestCase):
             expected = '<div class="cms-submenu-item cms-submenu-item-title"><span>Multi Columns</span></div>'
             self.assertTrue(expected in plugin_menu)
 
-    def test_render_placeholder_toolbar_js(self):
+    def test_render_placeholder_toolbar_json(self):
         cms_page = create_page("page", 'nav_playground.html', "en")
         renderer = self.get_renderer()
         placeholder = cms_page.placeholders.get(slot='body')
-        content = renderer.get_placeholder_toolbar_js(placeholder, cms_page)
+        content = renderer.get_placeholder_toolbar_json(placeholder, cms_page)
 
-        expected_bits = [
-            '"MultiColumnPlugin"',
-            '"addPluginHelpTitle": "Add plugin to placeholder \\"Body\\""',
-            '"name": "Body"',
-            '"placeholder_id": "{}"'.format(placeholder.pk),
-        ]
+        content_id = content[0]
+        self.assertEqual(content_id, 'cms-placeholder-{}'.format(placeholder.pk))
 
-        for bit in expected_bits:
-            self.assertIn(bit, content)
+        json_data = content[1]
+
+        expected_bits = {
+            'name': "Body",
+            'placeholder_id': "{}".format(placeholder.pk),
+            'plugin_restriction': "MultiColumnPlugin",
+            'addPluginHelpTitle': "Add plugin to placeholder \"Body\"",
+        }
+
+        for k, v in expected_bits.items():
+            self.assertIn(v, json_data[k])
 
     def test_render_placeholder_toolbar_js_escaping(self):
         cms_page = create_page("page", 'nav_playground.html', "en")
@@ -64,17 +69,22 @@ class TestStructureRenderer(CMSTestCase):
         conf = {placeholder.slot: {'name': 'Content-with-dash'}}
 
         with self.settings(CMS_PLACEHOLDER_CONF=conf):
-            content = renderer.get_placeholder_toolbar_js(placeholder, cms_page)
+            content = renderer.get_placeholder_toolbar_json(placeholder, cms_page)
 
-        expected_bits = [
-            '"MultiColumnPlugin"',
-            '"addPluginHelpTitle": "Add plugin to placeholder \\"Content-with-dash\\""',
-            '"name": "Content-with-dash"',
-            '"placeholder_id": "{}"'.format(placeholder.pk),
-        ]
+        content_id = content[0]
+        self.assertEqual(content_id, 'cms-placeholder-{}'.format(placeholder.pk))
 
-        for bit in expected_bits:
-            self.assertIn(bit, content)
+        json_data = content[1]
+
+        expected_bits = {
+            'name': "Content-with-dash",
+            'placeholder_id': "{}".format(placeholder.pk),
+            'plugin_restriction': "MultiColumnPlugin",
+            'addPluginHelpTitle': "Add plugin to placeholder \"Content-with-dash\"",
+        }
+
+        for k, v in expected_bits.items():
+            self.assertIn(v, json_data[k])
 
 
 class TestContentRenderer(TestStructureRenderer):

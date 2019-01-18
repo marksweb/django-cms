@@ -1211,7 +1211,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         request = self.get_page_request(page, user, edit=False)
         response = detail_view(request, ex1.pk)
         self.assertContains(response, "<h1>char_1</h1>")
-        self.assertContains(response, "CMS.API")
+        self.assertNotContains(response, "CMS.API")
 
     def test_edit(self):
         user = self.get_staff()
@@ -1569,11 +1569,11 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
             response,
-            "['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_1', ex1.pk))
+            '["cms-plugin-{0}-{1}-{2}-{3}"'.format('placeholderapp', 'example1', 'char_1', ex1.pk))
 
         self.assertContains(
             response,
-            "['cms-plugin-{0}-{1}-{2}-{3}'".format('placeholderapp', 'example1', 'char_2', ex1.pk))
+            '["cms-plugin-{0}-{1}-{2}-{3}"'.format('placeholderapp', 'example1', 'char_2', ex1.pk))
 
     def test_add_tag(self):
         user = self.get_staff()
@@ -1829,7 +1829,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         request = self.get_page_request(page, user, edit=True)
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
-            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/"' % ex1.pk)
+            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/' % ex1.pk)
 
     def test_view_url(self):
         user = self.get_staff()
@@ -1847,7 +1847,7 @@ class EditModelTemplateTagTest(ToolbarTestBase):
         request = self.get_page_request(page, user, edit=True)
         response = detail_view(request, ex1.pk, template_string=template_text)
         self.assertContains(
-            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/"' % ex1.pk)
+            response, '"edit_plugin": "/admin/placeholderapp/example1/edit-field/%s/en/' % ex1.pk)
 
     def test_method_attribute(self):
         user = self.get_staff()

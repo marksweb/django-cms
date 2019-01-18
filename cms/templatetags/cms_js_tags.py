@@ -56,24 +56,24 @@ def render_cms_structure_js(context, renderer, obj):
         page_placeholder = page_placeholders_by_slot.get(placeholder_node.slot)
 
         if page_placeholder:
-            placeholder_js = renderer.render_page_placeholder(obj, page_placeholder)
-            markup_bits.append(placeholder_js)
+            placeholder_json = renderer.render_page_placeholder(obj, page_placeholder)
+            markup_bits.append(placeholder_json)
 
     for placeholder in static_placeholders:
-        placeholder_js = renderer.render_static_placeholder(placeholder)
-        markup_bits.append(placeholder_js)
+        placeholder_json = renderer.render_static_placeholder(placeholder)
+        markup_bits.append(placeholder_json)
     return mark_safe('\n'.join(markup_bits))
 
 
 @register.simple_tag(takes_context=True)
-def render_plugin_init_js(context, plugin):
+def render_plugin_init_json(context, plugin):
     renderer = context['cms_renderer']
-    plugin_js = renderer.get_plugin_toolbar_js(plugin)
+    plugin_json = renderer.get_plugin_toolbar_json(plugin)
     # Add the toolbar javascript for this plugin to the
     # sekizai "js" namespace.
     context[get_varname()]['js'].append(
         '<script data-cms type="application/json" class="cms-plugin-data">{}</script>'.format(
-            json.dumps([plugin_js])
+            json.dumps([plugin_json])
         )
     )
 
